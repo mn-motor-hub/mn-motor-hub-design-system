@@ -1,6 +1,6 @@
 {
   "name": "@mn/design-system",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Design system de MN Motor Hub — tokens compartidos entre la tienda web, el ERP interno y la generación de contenido de marca.",
   "license": "UNLICENSED",
   "private": false,

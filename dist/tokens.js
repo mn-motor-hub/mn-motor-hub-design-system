@@ -1,5 +1,5 @@
 // GENERADO por tokens/build.mjs. No editar a mano.
-export const version = "1.1.0"
+export const version = "1.2.0"
 
 export const tokens = {
   "breakpoint.lg": "1280px",
@@ -15,6 +15,7 @@ export const tokens = {
   "color.danger.hover": "#c53030",
   "color.info": "#4da6ff",
   "color.info.dim": "rgba(77, 166, 255, 0.12)",
+  "color.on-danger": "#2e0000",
   "color.on-primary": "#521300",
   "color.on-surface": "#e5e2e1",
   "color.on-surface.variant": "#e6beb2",

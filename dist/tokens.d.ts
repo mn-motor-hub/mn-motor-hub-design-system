@@ -16,6 +16,7 @@ export type TokenPath =
   | "color.danger.hover"
   | "color.info"
   | "color.info.dim"
+  | "color.on-danger"
   | "color.on-primary"
   | "color.on-surface"
   | "color.on-surface.variant"

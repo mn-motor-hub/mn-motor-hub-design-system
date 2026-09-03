@@ -39,7 +39,7 @@ verificado en la app corriendo.
 
 **Riesgo estimado: bajo.** Se cumplió, salvo por un hallazgo de contraste (ver 1.3).
 
-1. `npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.2.0`
+1. `npm install github:mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v1.3.0.tar.gz`
 2. En `src/app/globals.css`, borrar el bloque `:root` completo y reemplazarlo por:
    ```css
    @import '@mn/design-system/tokens.css';
@@ -81,20 +81,63 @@ en todos. Aprobado y aplicado:
 `Table.thead`, `inventario` y 3 CTAs del flujo de importación siguen el mismo cambio.
 Todas las acciones primarias del ERP pasan de texto blanco a marrón oscuro.
 
-### 1.4 Deuda nueva detectada — NO resuelta
+### 1.4 Paleta de Chakra UI filtrada — RESUELTA
 
-El relevamiento original solo buscó hex en el ERP, no `rgba()`. Hay **~30 `rgba()` sueltos**:
+El relevamiento original solo buscó hex en el ERP, no `rgba()`. Había **47 `rgba()` literales**,
+y dentro de ellos **8 colores que no pertenecen a la paleta** — un carmín, dos azules marinos y
+los verde/amarillo/rojo/azul/gris de Chakra UI.
 
-| Patrón | Ocurrencias | Es |
+Lo peor no era la cantidad sino dónde estaban: **`Badge` tenía las 5 variantes con fondo Chakra**
+y el texto con el token correcto, y el focus ring de `Input` era carmín.
+
+Resuelto en `d774dec`. Mapeo aplicado:
+
+| Literal | Era | Ahora |
 |---|---|---|
-| `rgba(255, 87, 26, α)` | 14, con 6 alphas distintos | `--color-primary` con alpha |
-| `rgba(255, 255, 255, α)` | ~11 | blanco con alpha |
-| `rgba(240, 82, 82, α)` | 4 | `--color-danger` con alpha |
-| `rgba(233, 69, 96, 0.15)` | 2 | **fuera de paleta** — un carmín |
-| `rgba(26, 26, 46, α)` | 2 | **fuera de paleta** — un azul marino |
+| `56, 161, 105` | verde Chakra | `--color-success-rgb` |
+| `214, 158, 46` | amarillo Chakra | `--color-warning-rgb` |
+| `229, 62, 62` | rojo Chakra | `--color-danger-rgb` |
+| `49, 130, 206` | azul Chakra | `--color-info-rgb` |
+| `113, 128, 150` | gris azulado Chakra | `--color-outline-rgb` |
+| `233, 69, 96` | carmín | `--color-primary-rgb` |
+| `26, 26, 46` | navy | `--color-surface-lowest-rgb` |
+| `22, 33, 62` | navy 2 | `--color-surface-low-rgb` |
 
-Los dos últimos no corresponden a ningún color de la marca. Requiere su propia tarea: definir
-la escala de alphas en el paquete y decidir qué hacer con los dos colores ajenos.
+Los otros 35 ya eran colores de la paleta escritos a mano: se tokenizaron sin cambio visual.
+
+Para que un token pudiera vivir dentro de `rgba()` hizo falta **v1.3.0**, que emite variantes
+`-rgb` (`--color-primary-rgb: 255, 87, 26`) declaradas en `rgbVariants`.
+
+### 1.5 Instalación — por qué tarball y no `github:`
+
+El primer deploy a Vercel falló con `Permission denied (publickey)`. npm normaliza cualquier URL
+de GitHub a `git+ssh://git@github.com/...`, y Vercel no tiene llave SSH de la organización.
+
+Se resolvió haciendo el repo del design system **público** (son tokens de diseño y una guía de
+marca: sin secretos, y los colores ya viajan en el CSS del sitio público) e instalando por
+**tarball del tag**:
+
+```
+https://github.com/mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v1.3.0.tar.gz
+```
+
+npm respeta ese URL literal y lo baja por HTTPS plano, sin git y sin auth. Es también el motivo
+por el que `dist/` se commitea: el tarball no ejecuta `prepare`, así que el paquete tiene que
+venir ya construido.
+
+⚠️ **La Fase 2 debe usar la misma forma de instalación.** Un `npm install github:...` vuelve a
+romper el deploy.
+
+### 1.6 Estado final del ERP
+
+Fuera de `comprobante.module.css`, que queda intacto a propósito:
+
+| Métrica | Antes | Ahora |
+|---|---|---|
+| Hex hardcodeados | 19 | **0** |
+| `rgba()` literales | 47 | **0** |
+| `font-size` sin token | 8 | **0** |
+| Contraste AA en texto sobre marca | falla en 8 | **cumple** |
 
 ---
 
@@ -148,7 +191,7 @@ elegir de la tabla.
 
 ### 2.3 Pasos
 
-1. `npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.2.0`
+1. `npm install github:mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v1.3.0.tar.gz`
 2. En `styles/globals.css`: reemplazar el `:root` por los `@import`, más los overrides
    justificados de 2.1.
 3. **Renombrar los colores en dos pasos** (por la inversión de `--color-primary`):
@@ -195,7 +238,8 @@ que hoy no lo usa. Opciones: extraer primero solo las primitivas sin Radix (`But
 - [x] Fase 1 — ERP consumiendo el paquete
 - [x] Hex hardcodeados eliminados del ERP (salvo el comprobante, a propósito)
 - [x] Contraste AA en el texto sobre colores de marca
-- [ ] Deuda de `rgba()` del ERP (ver 1.4)
+- [x] Paleta de Chakra erradicada del ERP
+- [x] ERP sin un solo valor de color, tamaño o radio fuera del sistema
 - [ ] Decisión tomada sobre `--layout-container-max` en la web
 - [ ] Decisión tomada sobre los `28px` de la web
 - [ ] Fase 2 — web consumiendo el paquete

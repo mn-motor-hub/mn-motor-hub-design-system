@@ -17,7 +17,7 @@ tokens/tokens.json      ←  FUENTE DE VERDAD. Lo único que se edita a mano.
         │
         │  npm run build
         ▼
-dist/tokens.css         →  :root con 92 CSS variables
+dist/tokens.css         →  :root con 103 CSS variables
 dist/recipes.css        →  clases .mn-heading, .mn-label, .mn-price…
 dist/tokens.json        →  mapa plano resuelto, con descripciones
 dist/tokens.js + .d.ts  →  import tipado para lógica en JS/TS
@@ -32,11 +32,15 @@ sin necesitar un paso de build. Nunca editarlo a mano: `npm run build` lo sobres
 ## Instalar en un proyecto
 
 ```bash
-npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.2.0
+npm install https://github.com/mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v1.3.0.tar.gz
 ```
 
-Fijar siempre un tag. Apuntar a `#main` significa que un cambio de token puede llegar a
-producción sin que lo pidas.
+Se instala por **tarball del tag**, no por `github:` ni `git+ssh`. npm normaliza los URLs de
+GitHub a SSH, y Vercel no tiene llave SSH: el deploy falla con `Permission denied (publickey)`.
+El tarball baja por HTTPS plano, sin git y sin auth.
+
+El tag va explícito en el URL. Apuntar a un branch significaría que un cambio de token puede
+llegar a producción sin que lo pidas.
 
 ### CSS
 
@@ -94,6 +98,12 @@ tokens['breakpoint.md']       // '768px'
    `@media (min-width: 768px)`.
 4. **`--touch-min` (44px) no es espaciado.** Es el mínimo de área táctil. No redondearlo a la
    escala de `--space-*`.
+5. **Ningún `rgba()` con números literales.** Para transparencia, usar el triplete:
+   ```css
+   background: rgba(var(--color-primary-rgb), 0.2);
+   ```
+   Si el color que necesitás con alpha no tiene variante `-rgb`, agregalo a `rgbVariants`
+   en `tokens/tokens.json`. El build valida que la ruta exista y que sea un hex.
 
 ---
 

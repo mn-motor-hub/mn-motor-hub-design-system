@@ -24,7 +24,7 @@ señalización industrial, no "energía juvenil". El negro es taller, no lujo.
 ## 2. Tokens
 
 <!-- tokens:start -->
-> Generado desde `tokens/tokens.json` v1.2.0. No editar a mano.
+> Generado desde `tokens/tokens.json` v1.3.0. No editar a mano.
 
 ### Paleta
 

@@ -61,6 +61,23 @@ for (const path of Object.keys(flat)) {
   cssValue[path] = match ? `var(${cssVar(match[1])})` : flat[path]
 }
 
+/* ─── 2b. Variantes -rgb para uso con alpha ────────────────────── */
+
+const HEX = /^#([0-9a-f]{6})$/i
+
+for (const path of src.rgbVariants?.paths ?? []) {
+  const value = resolved[path]
+  if (value === undefined) throw new Error(`rgbVariants apunta a un token inexistente: ${path}`)
+  const match = HEX.exec(value.trim())
+  if (!match) throw new Error(`rgbVariants solo acepta hex de 6 digitos; ${path} vale ${value}`)
+  const n = parseInt(match[1], 16)
+  const triplet = `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`
+  const derived = `${path}-rgb`
+  flat[derived] = triplet
+  resolved[derived] = triplet
+  cssValue[derived] = triplet
+}
+
 /* ─── 3. dist/tokens.css ───────────────────────────────────────── */
 
 const GROUP_TITLES = {

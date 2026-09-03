@@ -1,4 +1,4 @@
-/* MN Motor Hub — Design Tokens v1.2.0
+/* MN Motor Hub — Design Tokens v1.3.0
  * GENERADO por tokens/build.mjs. No editar a mano.
  */
 
@@ -30,6 +30,17 @@
   --color-on-danger:              #2e0000;
   --color-info:                   #4da6ff;
   --color-info-dim:               rgba(77, 166, 255, 0.12);
+  --color-primary-rgb:            255, 87, 26;
+  --color-primary-dim-rgb:        255, 181, 158;
+  --color-on-surface-rgb:         229, 226, 225;
+  --color-outline-rgb:            173, 137, 126;
+  --color-success-rgb:            76, 175, 125;
+  --color-warning-rgb:            240, 168, 69;
+  --color-danger-rgb:             240, 82, 82;
+  --color-info-rgb:               77, 166, 255;
+  --color-background-rgb:         19, 19, 19;
+  --color-surface-lowest-rgb:     14, 14, 14;
+  --color-surface-low-rgb:        28, 27, 27;
   --color-surface:                var(--color-surface-container);
   --color-bg:                     var(--color-background);
   --color-accent:                 var(--color-primary-dim);

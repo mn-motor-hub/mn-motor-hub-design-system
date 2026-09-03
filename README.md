@@ -17,7 +17,7 @@ tokens/tokens.json      ←  FUENTE DE VERDAD. Lo único que se edita a mano.
         │
         │  npm run build
         ▼
-dist/tokens.css         →  :root con 90 CSS variables
+dist/tokens.css         →  :root con 92 CSS variables
 dist/recipes.css        →  clases .mn-heading, .mn-label, .mn-price…
 dist/tokens.json        →  mapa plano resuelto, con descripciones
 dist/tokens.js + .d.ts  →  import tipado para lógica en JS/TS
@@ -32,7 +32,7 @@ sin necesitar un paso de build. Nunca editarlo a mano: `npm run build` lo sobres
 ## Instalar en un proyecto
 
 ```bash
-npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.0.0
+npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.2.0
 ```
 
 Fijar siempre un tag. Apuntar a `#main` significa que un cambio de token puede llegar a
@@ -103,11 +103,11 @@ tokens['breakpoint.md']       // '768px'
 # 1. editar tokens/tokens.json
 npm run build          # regenera dist/ y la paleta de docs/BRAND.md
 git commit -am "feat(tokens): ..."
-git tag v1.1.0
+git tag v1.3.0
 git push --follow-tags
 
 # 2. en cada consumidor
-npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.1.0
+npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.3.0
 ```
 
 `npm run check` regenera y falla si `dist/` quedó desincronizado del JSON — útil en CI para
@@ -137,7 +137,8 @@ evitar que alguien commitee una edición manual de `dist/`.
 ## Roadmap
 
 - [x] **v1.0** — Tokens, recetas tipográficas, guía de marca
-- [ ] **v1.1** — Migrar el ERP a consumir el paquete
-- [ ] **v1.2** — Migrar la web (requiere decidir los 7 tamaños off-scale, ver `MIGRATION.md`)
+- [x] **v1.2** — `--color-danger-hover` y `--color-on-danger`
+- [x] **Fase 1** — ERP migrado, sin hex hardcodeados y con contraste AA
+- [ ] **Fase 2** — Migrar la web (requiere decidir los 7 tamaños off-scale, ver `MIGRATION.md`)
 - [ ] **v2.0** — `@mn/design-system/ui`: primitivas React extraídas del ERP (Button, Badge, Input, Select, Modal, Table)
 - [ ] Paleta validada para fondo claro, si la marca la necesita para redes

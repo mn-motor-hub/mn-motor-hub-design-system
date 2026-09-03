@@ -32,24 +32,69 @@ temporal, o revisar cada uno de los 32 usos.
 
 ---
 
-## Fase 1 — ERP (`mn-motor-hub-erp-frontend`)
+## Fase 1 — ERP (`mn-motor-hub-erp-frontend`) ✅ COMPLETADA
 
-**Riesgo: bajo.** Ya usa esta nomenclatura. Solo cambian 5 nombres del grupo de espaciado.
+Rama `feat/design-system-tokens`, commit `a0e3873`. Build y typecheck en verde,
+verificado en la app corriendo.
 
-1. `npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.0.0`
+**Riesgo estimado: bajo.** Se cumplió, salvo por un hallazgo de contraste (ver 1.3).
+
+1. `npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.2.0`
 2. En `src/app/globals.css`, borrar el bloque `:root` completo y reemplazarlo por:
    ```css
    @import '@mn/design-system/tokens.css';
    @import '@mn/design-system/recipes.css';
    ```
 3. Renombrar los 5 tokens de espaciado de la tabla de arriba.
-4. Limpiar la deuda detectada en el relevamiento: **14 `#fff` y ~10 grises Zinc**
-   (`#52525b`, `#18181b`, `#71717a`, `#3f3f46`, `#e4e4e7`, `#d4d4d8`, `#f4f4f5`) hardcodeados
-   en los CSS Modules. Son una paleta fría ajena a la marca. Mapear a la escala de superficies
-   y a `--color-on-surface`.
-5. Verificar visualmente el dashboard, inventario, ventas y finanzas.
+4. Limpiar los hex hardcodeados. **Cero hex fuera del comprobante.**
+5. Verificar visualmente.
 
-**Resultado esperado: cero cambio visual**, salvo la corrección de los grises fríos.
+### 1.1 Corrección al relevamiento — `comprobante.module.css`
+
+El relevamiento contó 15 grises Zinc de este archivo como "paleta fría que se coló".
+**Era un error.** El archivo abre con un comentario explícito: es un documento imprimible con
+fondo blanco fijo a propósito, independiente del tema oscuro, y tiene su `@media print`.
+
+Quedó **intacto**. Si algún día se quiere tokenizar, necesita su propio set de tokens de
+impresión / light, no los tokens dark del paquete.
+
+### 1.2 Tokens agregados al paquete durante la migración
+
+Dos valores del ERP no tenían token. Se agregaron en la fuente, no en el consumidor:
+
+| Token | Valor | Versión | Motivo |
+|---|---|---|---|
+| `--color-danger-hover` | `#c53030` | v1.1.0 | Hover del botón destructivo, hardcodeado |
+| `--color-on-danger` | `#2e0000` | v1.2.0 | No había texto legible sobre el rojo sólido |
+
+### 1.3 Contraste — el único cambio visual
+
+El texto sobre los colores de marca era `#fff` hardcodeado en 8 lugares, y fallaba WCAG AA
+en todos. Aprobado y aplicado:
+
+| Par | Antes | Ahora |
+|---|---|---|
+| `Button.primary` sobre durazno `#ffb59e` | **1.70** | **8.51** |
+| `Button.secondary` sobre naranja `#ff571a` | 3.17 | **4.57** |
+| `Button.danger` sobre rojo `#f05252` | 3.26 | **5.41** |
+
+`Table.thead`, `inventario` y 3 CTAs del flujo de importación siguen el mismo cambio.
+Todas las acciones primarias del ERP pasan de texto blanco a marrón oscuro.
+
+### 1.4 Deuda nueva detectada — NO resuelta
+
+El relevamiento original solo buscó hex en el ERP, no `rgba()`. Hay **~30 `rgba()` sueltos**:
+
+| Patrón | Ocurrencias | Es |
+|---|---|---|
+| `rgba(255, 87, 26, α)` | 14, con 6 alphas distintos | `--color-primary` con alpha |
+| `rgba(255, 255, 255, α)` | ~11 | blanco con alpha |
+| `rgba(240, 82, 82, α)` | 4 | `--color-danger` con alpha |
+| `rgba(233, 69, 96, 0.15)` | 2 | **fuera de paleta** — un carmín |
+| `rgba(26, 26, 46, α)` | 2 | **fuera de paleta** — un azul marino |
+
+Los dos últimos no corresponden a ningún color de la marca. Requiere su propia tarea: definir
+la escala de alphas en el paquete y decidir qué hacer con los dos colores ajenos.
 
 ---
 
@@ -103,7 +148,7 @@ elegir de la tabla.
 
 ### 2.3 Pasos
 
-1. `npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.0.0`
+1. `npm install github:mn-motor-hub/mn-motor-hub-design-system#v1.2.0`
 2. En `styles/globals.css`: reemplazar el `:root` por los `@import`, más los overrides
    justificados de 2.1.
 3. **Renombrar los colores en dos pasos** (por la inversión de `--color-primary`):
@@ -147,8 +192,10 @@ que hoy no lo usa. Opciones: extraer primero solo las primitivas sin Radix (`But
 
 ## Checklist de cierre
 
-- [ ] Fase 1 — ERP consumiendo el paquete, sin cambio visual
-- [ ] Grises Zinc eliminados del ERP
+- [x] Fase 1 — ERP consumiendo el paquete
+- [x] Hex hardcodeados eliminados del ERP (salvo el comprobante, a propósito)
+- [x] Contraste AA en el texto sobre colores de marca
+- [ ] Deuda de `rgba()` del ERP (ver 1.4)
 - [ ] Decisión tomada sobre `--layout-container-max` en la web
 - [ ] Decisión tomada sobre los `28px` de la web
 - [ ] Fase 2 — web consumiendo el paquete

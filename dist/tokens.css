@@ -1,4 +1,4 @@
-/* MN Motor Hub — Design Tokens v1.3.0
+/* MN Motor Hub — Design Tokens v1.4.0
  * GENERADO por tokens/build.mjs. No editar a mano.
  */
 
@@ -79,6 +79,9 @@
   --text-5xl:                     3rem;
   --text-6xl:                     4rem;
   --text-display:                 7.5rem;
+  --text-3xl-alt:                 1.75rem;
+  --text-title-page:              clamp(var(--text-3xl), 5vw, var(--text-5xl));
+  --text-title-section:           clamp(var(--text-3xl-alt), 4vw, var(--text-4xl));
 
   /* Pesos */
   --weight-regular:               400;

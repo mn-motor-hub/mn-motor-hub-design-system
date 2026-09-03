@@ -37,28 +37,33 @@ walk(src.tokens, [])
 
 /* ─── 2. Resolver referencias {ruta.al.token} ──────────────────── */
 
-const REF = /^\{([^}]+)\}$/
-
-function resolve(path, seen = new Set()) {
-  const raw = flat[path]
-  if (raw === undefined) throw new Error(`Token inexistente: ${path}`)
-  const match = REF.exec(raw.trim())
-  if (!match) return raw
-  const target = match[1]
-  if (seen.has(path)) throw new Error(`Referencia circular en ${path}`)
-  return resolve(target, new Set(seen).add(path))
-}
+// Una referencia puede ser el valor entero ("{color.primary}") o venir embebida
+// dentro de una expresion ("clamp({text.3xl}, 5vw, {text.5xl})").
+const REF_ANY = /\{([^}]+)\}/g
+const hasRef = (value) => { REF_ANY.lastIndex = 0; return REF_ANY.test(value) }
 
 /** Nombre de CSS variable: color.primary.hover -> --color-primary-hover */
 const cssVar = (path) => '--' + path.split('.').join('-')
 
+/** Valor literal, con cada {ruta} sustituida por su valor final. */
+function resolve(path, seen = new Set()) {
+  const raw = flat[path]
+  if (raw === undefined) throw new Error(`Token inexistente: ${path}`)
+  if (!hasRef(raw)) return raw
+  if (seen.has(path)) throw new Error(`Referencia circular en ${path}`)
+  const next = new Set(seen).add(path)
+  return raw.replace(REF_ANY, (_, target) => resolve(target, next))
+}
+
+/** Valor CSS: cada {ruta} pasa a var(--ruta), para no duplicar el literal. */
+const toCssValue = (raw) => raw.replace(REF_ANY, (_, target) => `var(${cssVar(target)})`)
+
 const resolved = {}   // ruta -> valor literal
-const cssValue = {}   // ruta -> valor CSS (mantiene var(--x) para las referencias)
+const cssValue = {}   // ruta -> valor CSS
 
 for (const path of Object.keys(flat)) {
   resolved[path] = resolve(path)
-  const match = REF.exec(flat[path].trim())
-  cssValue[path] = match ? `var(${cssVar(match[1])})` : flat[path]
+  cssValue[path] = toCssValue(flat[path])
 }
 
 /* ─── 2b. Variantes -rgb para uso con alpha ────────────────────── */
@@ -105,8 +110,8 @@ for (const path of Object.keys(flat)) {
 
 // Las referencias deben declararse despues de su objetivo dentro del mismo bloque.
 function orderGroup(paths) {
-  const plain = paths.filter((p) => !REF.test(flat[p].trim()))
-  const refs = paths.filter((p) => REF.test(flat[p].trim()))
+  const plain = paths.filter((p) => !hasRef(flat[p]))
+  const refs = paths.filter((p) => hasRef(flat[p]))
   return [...plain, ...refs]
 }
 
@@ -145,8 +150,7 @@ for (const [name, recipe] of Object.entries(src.recipes)) {
   recipesCss += `\n/* ${recipe.description ?? name} */\n.mn-${name} {\n`
   for (const prop of CSS_PROPS) {
     if (!(prop in recipe)) continue
-    const match = REF.exec(String(recipe[prop]).trim())
-    recipesCss += `  ${pad(prop + ':', 18)}${match ? `var(${cssVar(match[1])})` : recipe[prop]};\n`
+    recipesCss += `  ${pad(prop + ':', 18)}${toCssValue(String(recipe[prop]))};\n`
   }
   recipesCss += `}\n`
 }
@@ -169,8 +173,8 @@ const jsonOut = {
         name,
         Object.fromEntries(
           Object.entries(recipe).map(([prop, value]) => {
-            const match = REF.exec(String(value).trim())
-            return [prop, match ? resolved[match[1]] : value]
+            const raw = String(value)
+            return [prop, hasRef(raw) ? raw.replace(REF_ANY, (_, t) => resolved[t]) : value]
           }),
         ),
       ]),

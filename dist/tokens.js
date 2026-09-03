@@ -1,5 +1,5 @@
 // GENERADO por tokens/build.mjs. No editar a mano.
-export const version = "1.3.0"
+export const version = "1.4.0"
 
 export const tokens = {
   "breakpoint.lg": "1280px",
@@ -85,6 +85,7 @@ export const tokens = {
   "text.2xl": "1.5rem",
   "text.2xs": "0.625rem",
   "text.3xl": "2rem",
+  "text.3xl-alt": "1.75rem",
   "text.4xl": "2.5rem",
   "text.5xl": "3rem",
   "text.6xl": "4rem",
@@ -92,6 +93,8 @@ export const tokens = {
   "text.display": "7.5rem",
   "text.lg": "1.125rem",
   "text.sm": "0.875rem",
+  "text.title-page": "clamp(2rem, 5vw, 3rem)",
+  "text.title-section": "clamp(1.75rem, 4vw, 2.5rem)",
   "text.xl": "1.25rem",
   "text.xs": "0.75rem",
   "touch.min": "44px",

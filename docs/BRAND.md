@@ -24,7 +24,7 @@ señalización industrial, no "energía juvenil". El negro es taller, no lujo.
 ## 2. Tokens
 
 <!-- tokens:start -->
-> Generado desde `tokens/tokens.json` v1.0.0. No editar a mano.
+> Generado desde `tokens/tokens.json` v1.1.0. No editar a mano.
 
 ### Paleta
 
@@ -49,6 +49,7 @@ señalización industrial, no "energía juvenil". El negro es taller, no lujo.
 | `--color-success` | `#4CAF7D` | `76, 175, 125` | Confirmado, en stock, pagado. |
 | `--color-warning` | `#F0A845` | `240, 168, 69` | Stock bajo, pendiente. |
 | `--color-danger` | `#F05252` | `240, 82, 82` | Error, sin stock, anulado. |
+| `--color-danger-hover` | `#C53030` | `197, 48, 48` | Rojo en hover/pressed de acciones destructivas. |
 | `--color-info` | `#4DA6FF` | `77, 166, 255` | Informativo, neutro. |
 | `--color-bg` | `#131313` | `19, 19, 19` | — |
 | `--color-accent` | `#FFB59E` | `255, 181, 158` | — |

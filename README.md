@@ -17,7 +17,7 @@ tokens/tokens.json      ←  FUENTE DE VERDAD. Lo único que se edita a mano.
         │
         │  npm run build
         ▼
-dist/tokens.css         →  :root con 103 CSS variables
+dist/tokens.css         →  :root con 106 CSS variables
 dist/recipes.css        →  clases .mn-heading, .mn-label, .mn-price…
 dist/tokens.json        →  mapa plano resuelto, con descripciones
 dist/tokens.js + .d.ts  →  import tipado para lógica en JS/TS
@@ -32,7 +32,7 @@ sin necesitar un paso de build. Nunca editarlo a mano: `npm run build` lo sobres
 ## Instalar en un proyecto
 
 ```bash
-npm install https://github.com/mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v1.3.0.tar.gz
+npm install https://github.com/mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v1.4.0.tar.gz
 ```
 
 Se instala por **tarball del tag**, no por `github:` ni `git+ssh`. npm normaliza los URLs de
@@ -149,6 +149,7 @@ evitar que alguien commitee una edición manual de `dist/`.
 - [x] **v1.0** — Tokens, recetas tipográficas, guía de marca
 - [x] **v1.2** — `--color-danger-hover` y `--color-on-danger`
 - [x] **Fase 1** — ERP migrado, sin hex hardcodeados y con contraste AA
-- [ ] **Fase 2** — Migrar la web (requiere decidir los 7 tamaños off-scale, ver `MIGRATION.md`)
+- [x] **v1.4** — Tokens fluidos de título
+- [x] **Fase 2** — Web migrada, mobile-first y sin literales
 - [ ] **v2.0** — `@mn/design-system/ui`: primitivas React extraídas del ERP (Button, Badge, Input, Select, Modal, Table)
 - [ ] Paleta validada para fondo claro, si la marca la necesita para redes

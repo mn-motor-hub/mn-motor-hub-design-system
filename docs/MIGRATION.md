@@ -141,77 +141,77 @@ Fuera de `comprobante.module.css`, que queda intacto a propósito:
 
 ---
 
-## Fase 2 — Web (`mnmotorhub-web`)
+## Fase 2 — Web (`mnmotorhub-web`) ✅ COMPLETADA
 
-**Riesgo: alto.** No es una migración visualmente neutra. Leer entero antes de empezar.
+Commit `85b2099` en `main`. Build y typecheck en verde, verificado a 375px y 1920px.
 
-### 2.1 Decisiones que hay que tomar primero
+Las dos decisiones abiertas se resolvieron **midiendo en el sitio real**, no eligiendo de una
+tabla. Las dos veces el dato contradijo lo que este documento asumia.
 
-Tres cosas cambian de valor, no solo de nombre. **No se pueden resolver por búsqueda y reemplazo.**
+### 2.1 Ancho de pagina — el token importaba menos de lo previsto
 
-| # | Token | Web hoy | Paquete | Efecto |
-|---|---|---|---|---|
-| A | `--container-max` | `100%` | `1280px` | El sitio deja de ser full-width. **Muy visible en desktop.** |
-| B | `--spacing-edge` | `clamp(24px, 5vw, 72px)` | `clamp(16px, 5vw, 72px)` | 8px menos de padding lateral en móvil |
-| C | 7 tamaños off-scale | ver 2.2 | escala | Texto se corre hasta 4px |
+Este plan decia que `--container-max: 100%` hacia la web full-width. **Falso:** la home nunca
+uso el token. Cada seccion va a ancho completo por su propio CSS; el token solo gobernaba
+`PageLayout` y la pagina de producto.
 
-**A** es la más importante. La web puso `100%` a propósito (commit `2252a9e`). Si el diseño
-full-width es intencional, la web debe **sobrescribir el token localmente** después del import,
-no cambiar el paquete — el ERP sí quiere 1280px:
+Medido a 1920px con el estado anterior:
 
-```css
-@import '@mn/design-system/tokens.css';
+| Elemento | Antes | Ahora |
+|---|---|---|
+| Parrafo de seccion | 1761px — **~220 caracteres por linea** | 1136px — ~142 |
+| Cards de producto | 422px cada una | 266px |
+| Hero band de `PageLayout` | 1761px | 1280px |
 
-:root {
-  --layout-container-max: 100%;   /* la tienda es full-width por decisión de diseño */
-}
-```
+Lo legible son 45–75 caracteres. El full-width no era una decision de diseno defendible, asi
+que se adopto `1280px` **y ademas** se aplico el container a las 8 secciones que llevan el
+padding de borde. Las grillas son `repeat(N, 1fr)`, no `auto-fill`: no se perdio ninguna columna.
 
-Ese patrón —importar y sobrescribir— es el mecanismo previsto para cualquier divergencia
-legítima entre productos. Lo que no es aceptable es que diverjan *sin* que esté escrito por qué.
+Pendiente menor: 142 caracteres por linea sigue por encima del ideal. Los subtitulos de seccion
+convendria que tengan su propia medida (`max-width` en `ch`), como ya hace el subtitulo del Hero.
 
-### 2.2 Tamaños de fuente off-scale
+### 2.2 Titulos — 28px no era redondeable
 
-Los 20 tamaños hardcodeados de la web: 13 caen exacto en la escala, **7 no**. Para cada uno hay
-que decidir hacia dónde redondear.
+Este plan proponia redondear los 28px a `--text-2xl` (24) o `--text-3xl` (32). **Medido a 375px,
+a 32px tres de los cuatro titulos de la home se parten en dos renglones.** Y 28px no era el
+tamano de escritorio: era el override de movil de un par 40/28 escrito con `max-width`.
 
-| px | Archivos | Opción baja | Opción alta | Sugerido |
-|---|---|---|---|---|
-| `11` | `AvailabilityBadge`, `Navbar` | `--text-2xs` (10) −1 | `--text-xs` (12) +1 | **`--text-xs`** — 10px es muy chico para móvil |
-| `13` | `ProductListItem`, `CategoriaCard`, `ProductCard`, `contacto` | `--text-xs` (12) −1 | `--text-sm` (14) +1 | **`--text-sm`** — `CLAUDE.md` prohíbe <14px en móvil |
-| `15` | `ProductListItem`, `Navbar` | `--text-sm` (14) −1 | `--text-base` (16) +1 | **`--text-base`** |
-| `22` | `PageLayout` | `--text-xl` (20) −2 | `--text-2xl` (24) +2 | `--text-xl` |
-| `26` | `PageLayout` | `--text-2xl` (24) −2 | `--text-3xl` (32) +6 | `--text-2xl` |
-| `28` | `Categories`, `CTABanner`, `FeaturedProducts`, `WhyUs`, `producto` | `--text-2xl` (24) −4 | `--text-3xl` (32) +4 | **revisar a ojo** — son los H2 de sección, es el cambio más visible del sitio |
-| `36` | `producto/[codigoInterno]` | `--text-3xl` (32) −4 | `--text-4xl` (40) +4 | `--text-3xl` |
+Se resolvio con tokens fluidos (v1.4.0), que conservan exactos los dos extremos y eliminan el
+salto:
 
-⚠️ **`28px` aparece en 5 archivos y son todos títulos de sección.** Cualquiera de las dos
-opciones mueve la jerarquía visual de la home. Mirarlo en el navegador antes de decidir, no
-elegir de la tabla.
+| Token | Valor | Reemplaza |
+|---|---|---|
+| `--text-title-page` | `clamp(2rem, 5vw, 3rem)` | 48px + override movil 32px |
+| `--text-title-section` | `clamp(1.75rem, 4vw, 2.5rem)` | 40px + override movil 28px |
 
-### 2.3 Pasos
+Verificado a 375px: dan 32px y 28px, identico al estado anterior.
 
-1. `npm install github:mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v1.3.0.tar.gz`
-2. En `styles/globals.css`: reemplazar el `:root` por los `@import`, más los overrides
-   justificados de 2.1.
-3. **Renombrar los colores en dos pasos** (por la inversión de `--color-primary`):
-   `--color-primary` → `--color-primary-dim`, y recién después
-   `--color-primary-container` → `--color-primary`.
-4. Reemplazar los 20 `font-size` en px por tokens, según 2.2.
-5. Reemplazar los 10 `rgba()` sueltos por `--overlay-*`.
-6. Reemplazar el `9999px` suelto por `--radius-full`.
-7. Normalizar el espaciado: los off-scale son `3 6 10 12 20 36 40`.
-   **`44px` no se toca** — es el mínimo táctil, ahora `--touch-min`.
-8. Convertir las **7 media queries `max-width`** a `min-width`
-   (6 × `max-width: 767px`, 1 × `max-width: 479px`). Violan la regla mobile-first de `CLAUDE.md`.
-9. Mover `.section-accent` y `.soon-label` de `globals.css` a componentes o a `recipes.css`.
-10. QA a 375px, 768px y 1280px. Verificar que no haya scroll horizontal y que los targets
-    táctiles sigan ≥44px.
+### 2.3 Mobile-first
 
-### 2.4 Colores semánticos
+Las **7 media queries `max-width`** quedaron erradicadas. Cinco eran los saltos de titulo, que
+los tokens fluidos hacen innecesarios; las otras dos (`.cardWide`, `.scheduleRow`) se invirtieron
+a `min-width`.
 
-La web hoy no tiene ninguno. Con el paquete gana `success` / `warning` / `danger` / `info`.
-`AvailabilityBadge` es el primer candidato obvio: hoy resuelve estados con colores propios.
+### 2.4 Hallazgos no previstos
+
+- **`not-found.tsx` era todo inline styles**, prohibidos por `CLAUDE.md`. Como el script de
+  renombre solo recorria `.css`, su `var(--color-primary)` se habria dado vuelta en silencio de
+  durazno a naranja. Convertido a CSS Module.
+- **El area tactil manda sobre la escala de espaciado.** El boton de menu mobile tenia
+  `padding: 10px` (44px de alto); normalizarlo a `--space-sm` (8px) lo dejaba en 40px. Lleva
+  `min-height: var(--touch-min)`. Medido contra `main`, la cantidad de targets bajo 44px quedo
+  igual que antes: **18, todas preexistentes**.
+- `npm run lint` de la web esta roto de antes: el script es `next lint`, que Next 16 elimino.
+
+### 2.5 Estado final de la web
+
+| Metrica | Antes | Ahora |
+|---|---|---|
+| Hex hardcodeados | 10 | **0** |
+| `rgba()` literales | 10 | **0** |
+| `font-size` literales | 76 | **0** |
+| Espaciado literal | 88 | **0** |
+| Media queries `max-width` | 7 | **0** |
+| Inline styles en TSX | 4 | **0** |
 
 ---
 
@@ -240,6 +240,12 @@ que hoy no lo usa. Opciones: extraer primero solo las primitivas sin Radix (`But
 - [x] Contraste AA en el texto sobre colores de marca
 - [x] Paleta de Chakra erradicada del ERP
 - [x] ERP sin un solo valor de color, tamaño o radio fuera del sistema
+- [x] Fase 2 — web consumiendo el paquete
+- [x] `max-width` erradicados de la web
+- [x] Ningún hex hardcodeado en ninguno de los dos repos
+- [ ] Medida (`ch`) en los subtítulos de sección de la home
+- [ ] Los 18 touch targets bajo 44px de la web (preexistentes)
+- [ ] `npm run lint` de la web (script `next lint`, eliminado en Next 16)
 - [ ] Decisión tomada sobre `--layout-container-max` en la web
 - [ ] Decisión tomada sobre los `28px` de la web
 - [ ] Fase 2 — web consumiendo el paquete

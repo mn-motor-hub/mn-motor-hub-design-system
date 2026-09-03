@@ -215,21 +215,83 @@ a `min-width`.
 
 ---
 
-## Fase 3 — Primitivas (`v2.0`)
+## Fase 3 — Primitivas (`v2.0.0`) ✅ COMPLETADA
 
-Recién cuando las dos fases anteriores estén en `main`.
+ERP `3ee5abf`, web `e77c2dc`. Build y typecheck en verde en los dos.
 
-Extraer de `mn-motor-hub-erp-frontend/src/components/ui/` a `@mn/design-system/ui`:
-`Button` (4 variantes × 3 tamaños + loading), `Badge` (5 variantes), `Input`, `Select`,
-`Modal`, `Table`, `Pagination`, `StatCard`.
+Extraidas al subpath `@mn/design-system/ui`: **Button, Badge, Input, StatCard, Table,
+Pagination**. `Modal`, `Select`, `InfoPopover` y `ScrollToBottomButton` se quedan en el ERP:
+dependen de Radix y de portales que solo ese repo usa.
 
-El primer beneficiario es la web: hoy tiene **el botón naranja reimplementado en 4 archivos**
-(`Hero`, `Navbar`, `CTABanner`, `Catalog/Pagination`).
+El paquete se distribuye como fuente, asi que cada consumidor necesita
+`transpilePackages: ['@mn/design-system']` en su `next.config.ts`.
 
-Pendiente de resolver antes: el ERP usa Radix (`@radix-ui/react-dialog`, `-dropdown-menu`,
-`-select`). Si `Modal` y `Select` se extraen tal cual, Radix pasa a ser dependencia de la web,
-que hoy no lo usa. Opciones: extraer primero solo las primitivas sin Radix (`Button`, `Badge`,
-`Input`, `StatCard`), o aceptar Radix en la web.
+### 3.1 Correccion — la web no tenia "el boton naranja en 4 archivos"
+
+Este documento afirmaba que la web reimplementaba el boton naranja cuatro veces. **Era falso**,
+y el error venia de haber contado por `grep` de `background: var(--color-primary-container)`
+sin mirar que elemento era cada uno:
+
+| Archivo | Lo que realmente es |
+|---|---|
+| `Navbar` | El **badge del carrito** (18px, `position: absolute`). No es un boton. |
+| `Hero` | Dos `<Link>` de marketing, Oswald display en mayusculas |
+| `CTABanner` | Otro `<Link>` de marketing |
+| `Catalog/Pagination` | Un control de paginacion — **este si** era un duplicado real |
+
+Los CTA de marketing **no se migraron a propósito**. Son `<Link>` con tipografia display, no
+botones de UI; forzarlos dentro de la primitiva los haria parecer botones de dashboard. Ya
+consumian tokens correctamente desde la Fase 2.
+
+La duplicacion real de la web era **una**, no cuatro: `Pagination`.
+
+### 3.2 Button — renombre de variantes
+
+En el ERP `primary` era el durazno y `secondary` el naranja, al reves de lo que espera una
+tienda cuyo CTA principal es naranja.
+
+| Ahora | Color | Antes en el ERP | Llamadas migradas |
+|---|---|---|---|
+| `primary` | naranja `#ff571a` | `secondary` | 3 |
+| `accent` | durazno `#ffb59e` | `primary` (era el default) | 16 |
+| `danger` | rojo | igual | — |
+| `ghost` | transparente | igual | — |
+
+Los colores no cambiaron, solo los nombres. **Cero cambio visual por el renombre.**
+
+### 3.3 Touch target — el unico cambio visual
+
+Los tamanos del Button venian de un dashboard de escritorio y estaban por debajo del minimo
+que exige `CLAUDE.md`:
+
+| Tamano | Antes | Ahora |
+|---|---|---|
+| `sm` | ~22px | ~22px — **unico que libera el minimo**, para tablas densas |
+| `md` (default) | ~30px | **44px** |
+| `lg` | ~50px | ~50px |
+
+Los 35 botones `md`/`ghost` del ERP crecen 14px. Era necesario: la primitiva ahora es tambien
+el boton de una tienda mobile-first.
+
+### 3.4 Lo que atajo el type checker
+
+El script que migro las variantes usaba una regex `variant="([a-z]+)"`, que no reconoce un
+valor dinamico. En `ActivarDesactivarButton.tsx` habia
+`variant={activo ? 'danger' : 'primary'}`, asi que le inyecto un segundo `variant="accent"`.
+
+`tsc` lo marco como atributo duplicado antes de llegar a ningun lado. Corregido a mano, y el
+ternario paso a `'accent'` para conservar el durazno.
+
+**Leccion para la Fase 4:** una migracion por regex sobre JSX necesita `tsc` como red, no como
+formalidad.
+
+### 3.5 Ganancia de la web
+
+- `Pagination` local (52 lineas + 42 de CSS) eliminada. La compartida trae paginas numeradas
+  con elipsis, `rel="prev"` y preserva filtros con valores multiples.
+- `AvailabilityBadge` pierde sus estilos propios y envuelve el `Badge` compartido. El badge de
+  stock pasa de durazno a verde: el sistema define `--color-success` como "confirmado, en
+  stock, pagado", asi que el durazno contradecia su propia semantica y el ERP ya usaba verde.
 
 ---
 
@@ -243,7 +305,10 @@ que hoy no lo usa. Opciones: extraer primero solo las primitivas sin Radix (`But
 - [x] Fase 2 — web consumiendo el paquete
 - [x] `max-width` erradicados de la web
 - [x] Ningún hex hardcodeado en ninguno de los dos repos
+- [x] Fase 3 — primitivas compartidas en `@mn/design-system/ui`
+- [x] `Button` con mínimo táctil de 44px
 - [ ] Medida (`ch`) en los subtítulos de sección de la home
+- [ ] `Modal` y `Select` (esperan un segundo consumidor que necesite Radix)
 - [ ] Los 18 touch targets bajo 44px de la web (preexistentes)
 - [ ] `npm run lint` de la web (script `next lint`, eliminado en Next 16)
 - [ ] Decisión tomada sobre `--layout-container-max` en la web

@@ -185,5 +185,6 @@ evitar que alguien commitee una edición manual de `dist/`.
 - [x] **Fase 1** — ERP migrado, sin hex hardcodeados y con contraste AA
 - [x] **v1.4** — Tokens fluidos de título
 - [x] **Fase 2** — Web migrada, mobile-first y sin literales
-- [ ] **v2.0** — `@mn/design-system/ui`: primitivas React extraídas del ERP (Button, Badge, Input, Select, Modal, Table)
+- [x] **v2.0** — `@mn/design-system/ui`: Button, Badge, Input, StatCard, Table, Pagination
+- [x] **Fase 3** — ERP y web consumiendo las primitivas compartidas
 - [ ] Paleta validada para fondo claro, si la marca la necesita para redes

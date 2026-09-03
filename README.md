@@ -22,6 +22,8 @@ dist/recipes.css        →  clases .mn-heading, .mn-label, .mn-price…
 dist/tokens.json        →  mapa plano resuelto, con descripciones
 dist/tokens.js + .d.ts  →  import tipado para lógica en JS/TS
 docs/BRAND.md           →  guía de marca (paleta inyectada automáticamente)
+
+ui/                     →  primitivas React (NO generadas, se editan a mano)
 ```
 
 **`dist/` es generado y está commiteado a propósito** — así los consumidores instalan por git
@@ -32,7 +34,7 @@ sin necesitar un paso de build. Nunca editarlo a mano: `npm run build` lo sobres
 ## Instalar en un proyecto
 
 ```bash
-npm install https://github.com/mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v1.4.0.tar.gz
+npm install https://github.com/mn-motor-hub/mn-motor-hub-design-system/archive/refs/tags/v2.0.0.tar.gz
 ```
 
 Se instala por **tarball del tag**, no por `github:` ni `git+ssh`. npm normaliza los URLs de
@@ -72,6 +74,38 @@ Para no repetir la combinación Oswald + uppercase + tracking en cada componente
 <h2 className="mn-heading">Repuestos de motor</h2>
 <span className="mn-price">$ 45,00</span>
 ```
+
+### Primitivas React
+
+Requiere una línea en `next.config.ts` del consumidor, porque el paquete se distribuye como
+fuente (`.tsx` + CSS Modules) y Next no transpila `node_modules` por defecto:
+
+```ts
+const nextConfig: NextConfig = {
+  transpilePackages: ['@mn/design-system'],
+}
+```
+
+Después:
+
+```tsx
+import { Button, Badge, Input, Table, Thead, Tbody, Tr, Th, Td, Pagination, StatCard }
+  from '@mn/design-system/ui'
+
+<Button variant="primary">Ver catálogo</Button>
+<Badge variant="success">En stock</Badge>
+```
+
+**`Button`** — `variant`: `primary` (naranja de marca) · `accent` (durazno) · `danger` · `ghost`.
+`size`: `sm` · `md` · `lg`. Más `loading`.
+
+⚠️ **`size="sm"` es el único que libera el mínimo táctil de 44px.** Existe para tablas densas de
+escritorio; no usarlo en superficies touch.
+
+**`Badge`** — `variant`: `success` · `warning` · `danger` · `info` · `neutral`.
+
+`Modal` y `Select` **no** están en el paquete: dependen de Radix, que solo el ERP usa. Viven
+ahí hasta que haya un segundo consumidor que los necesite.
 
 ### JS / TS
 

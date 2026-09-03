@@ -1,6 +1,6 @@
 {
   "name": "@mn/design-system",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Design system de MN Motor Hub — tokens compartidos entre la tienda web, el ERP interno y la generación de contenido de marca.",
   "license": "UNLICENSED",
   "private": false,
@@ -11,6 +11,7 @@
   "files": [
     "dist",
     "tokens",
+    "ui",
     "docs"
   ],
   "main": "./dist/tokens.js",
@@ -23,7 +24,9 @@
     "./tokens.css": "./dist/tokens.css",
     "./recipes.css": "./dist/recipes.css",
     "./tokens.json": "./dist/tokens.json",
-    "./source": "./tokens/tokens.json"
+    "./source": "./tokens/tokens.json",
+    "./ui": "./ui/index.ts",
+    "./ui/*": "./ui/*"
   },
   "scripts": {
     "build": "node tokens/build.mjs",
@@ -36,5 +39,19 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/mn-motor-hub/mn-motor-hub-design-system.git"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "next": ">=14",
+    "lucide-react": ">=0.3"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
+    "lucide-react": {
+      "optional": true
+    }
   }
 }

@@ -1,0 +1,103 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  /* Minimo tactil. Los consumidores son mobile-first. */
+  min-height: var(--touch-min);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1;
+  transition: background-color 0.15s, color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variants */
+
+/* Accion principal. El naranja de marca. */
+.primary {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+/* Accion destacada de menor peso. El durazno.
+   Es el boton dominante del ERP, donde el naranja seria demasiado ruido. */
+.accent {
+  background-color: var(--color-primary-dim);
+  color: var(--color-on-primary);
+}
+
+.accent:hover:not(:disabled) {
+  background-color: var(--color-primary-dim-hover);
+}
+
+.danger {
+  background-color: var(--color-danger);
+  color: var(--color-on-danger);
+}
+
+.danger:hover:not(:disabled) {
+  background-color: var(--color-danger-hover);
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.ghost:hover:not(:disabled) {
+  background-color: var(--color-bg);
+}
+
+/* Sizes */
+
+/* Compacto, para tablas densas de escritorio.
+   Unico tamano que libera el minimo tactil: no usar en superficies touch. */
+.sm {
+  min-height: auto;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+}
+
+.md {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.lg {
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-lg);
+}
+
+/* Loading */
+.loading {
+  position: relative;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

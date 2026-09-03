@@ -1,5 +1,5 @@
 // GENERADO por tokens/build.mjs. No editar a mano.
-export const version = "1.4.0"
+export const version = "2.0.0"
 
 export const tokens = {
   "breakpoint.lg": "1280px",

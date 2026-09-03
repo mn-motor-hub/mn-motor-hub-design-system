@@ -1,0 +1,62 @@
+/* MN Motor Hub — Recetas tipograficas v1.0.0
+ * GENERADO por tokens/build.mjs. No editar a mano.
+ * Requiere tokens.css importado antes.
+ */
+
+/* Titulo de seccion. La firma visual de la marca. */
+.mn-heading {
+  font-family:      var(--font-oswald);
+  font-weight:      var(--weight-bold);
+  letter-spacing:   var(--tracking-wide);
+  line-height:      var(--leading-tight);
+  text-transform:   uppercase;
+}
+
+/* Titulo secundario, dentro de cards y bloques. */
+.mn-subheading {
+  font-family:      var(--font-oswald);
+  font-weight:      var(--weight-semibold);
+  letter-spacing:   var(--tracking-wide);
+  line-height:      var(--leading-snug);
+  text-transform:   uppercase;
+}
+
+/* Etiqueta pequena. Badges, overlines, estados. */
+.mn-label {
+  font-family:      var(--font-inter);
+  font-size:        var(--text-2xs);
+  font-weight:      var(--weight-bold);
+  letter-spacing:   var(--tracking-widest);
+  text-transform:   uppercase;
+}
+
+/* Texto de accion. */
+.mn-button {
+  font-family:      var(--font-inter);
+  font-weight:      var(--weight-semibold);
+  letter-spacing:   var(--tracking-wider);
+  text-transform:   uppercase;
+}
+
+/* Texto corrido. */
+.mn-body {
+  font-family:      var(--font-inter);
+  font-weight:      var(--weight-regular);
+  letter-spacing:   var(--tracking-normal);
+  line-height:      var(--leading-normal);
+}
+
+/* Precio de producto. Siempre en naranja. */
+.mn-price {
+  font-family:      var(--font-oswald);
+  font-weight:      var(--weight-bold);
+  letter-spacing:   var(--tracking-normal);
+  color:            var(--color-primary);
+}
+
+/* Codigos de parte, SKU, cifras en tablas. */
+.mn-data {
+  font-family:      var(--font-mono);
+  font-weight:      var(--weight-medium);
+  letter-spacing:   var(--tracking-normal);
+}

@@ -1,5 +1,5 @@
 // GENERADO por tokens/build.mjs. No editar a mano.
-export const version = "2.0.0"
+export const version = "2.1.0"
 
 export const tokens = {
   "breakpoint.lg": "1280px",
@@ -48,6 +48,12 @@ export const tokens = {
   "color.warning": "#f0a845",
   "color.warning-rgb": "240, 168, 69",
   "color.warning.dim": "rgba(240, 168, 69, 0.12)",
+  "duration.micro": "120ms",
+  "duration.reveal": "600ms",
+  "duration.scene": "1200ms",
+  "duration.ui": "240ms",
+  "ease.snap": "cubic-bezier(0.3, 0, 0, 1)",
+  "ease.standard": "cubic-bezier(0.2, 0.8, 0.2, 1)",
   "font.display": "'Oswald', sans-serif",
   "font.inter": "'Inter', sans-serif",
   "font.mono": "'JetBrains Mono', monospace",
@@ -71,6 +77,7 @@ export const tokens = {
   "radius.lg": "8px",
   "radius.md": "4px",
   "radius.sm": "2px",
+  "shadow.glow-primary": "0 0 12px rgba(var(--color-primary-rgb), 0.3)",
   "shadow.lg": "0 8px 32px rgba(0, 0, 0, 0.65)",
   "shadow.md": "0 4px 16px rgba(0, 0, 0, 0.55)",
   "shadow.sm": "0 1px 4px rgba(0, 0, 0, 0.45)",
@@ -82,6 +89,7 @@ export const tokens = {
   "space.sm": "8px",
   "space.xl": "32px",
   "space.xs": "4px",
+  "stagger.step": "70ms",
   "text.2xl": "1.5rem",
   "text.2xs": "0.625rem",
   "text.3xl": "2rem",

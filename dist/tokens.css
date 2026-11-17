@@ -1,4 +1,4 @@
-/* MN Motor Hub — Design Tokens v2.0.0
+/* MN Motor Hub — Design Tokens v2.1.0
  * GENERADO por tokens/build.mjs. No editar a mano.
  */
 
@@ -127,6 +127,20 @@
   --shadow-sm:                    0 1px 4px rgba(0, 0, 0, 0.45);
   --shadow-md:                    0 4px 16px rgba(0, 0, 0, 0.55);
   --shadow-lg:                    0 8px 32px rgba(0, 0, 0, 0.65);
+  --shadow-glow-primary:          0 0 12px rgba(var(--color-primary-rgb), 0.3);
+
+  /* ease */
+  --ease-standard:                cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-snap:                    cubic-bezier(0.3, 0, 0, 1);
+
+  /* duration */
+  --duration-micro:               120ms;
+  --duration-ui:                  240ms;
+  --duration-reveal:              600ms;
+  --duration-scene:               1200ms;
+
+  /* stagger */
+  --stagger-step:                 70ms;
 
   /* Touch targets */
   --touch-min:                    44px;

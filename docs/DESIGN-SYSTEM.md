@@ -195,7 +195,7 @@ Idénticos y con adherencia alta (20 de 21 usos vía token).
 
 ### 2.9 Sombras — solo app
 
-`--shadow-sm` `0 1px 4px rgba(0,0,0,.45)` · `--shadow-md` `0 4px 16px rgba(0,0,0,.55)` · `--shadow-lg` `0 8px 32px rgba(0,0,0,.65)`
+`--shadow-sm` `0 1px 4px rgba(0,0,0,.45)` · `--shadow-md` `0 4px 16px rgba(0,0,0,.55)` · `--shadow-lg` `0 8px 32px rgba(0,0,0,.65)` · `--shadow-glow-primary` `0 0 12px rgba(var(--color-primary-rgb), 0.3)` (halo del CTA principal)
 
 ### 2.10 Breakpoints
 
